@@ -1,0 +1,9 @@
+README.md
+main.py
+pyproject.toml
+mcp_github_cli.egg-info/PKG-INFO
+mcp_github_cli.egg-info/SOURCES.txt
+mcp_github_cli.egg-info/dependency_links.txt
+mcp_github_cli.egg-info/entry_points.txt
+mcp_github_cli.egg-info/requires.txt
+mcp_github_cli.egg-info/top_level.txt
