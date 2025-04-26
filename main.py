@@ -41,13 +41,36 @@ def run_gh_command(command_args, input_data=None):
         Dict with command result
     """
     try:
-        # Add --json to get JSON output for parsing
-        if "--json" not in command_args:
-            # Don't add --json for commands that don't support it
-            non_json_commands = ["auth", "help", "completion"]
-            command_base = command_args[0] if command_args else ""
+        # Commands that don't support --json
+        non_json_commands = ["auth", "help", "completion"]
+        command_base = command_args[0] if command_args else ""
+        
+        # Commands that need specific JSON fields
+        json_fields_map = {
+            "search repos": "name,nameWithOwner,description,stargazerCount,forkCount,url",
+            "search issues": "title,url,state,number,repository,createdAt,updatedAt",
+            "search code": "repository,path,name,url",
+            "search users": "login,name,bio,url,avatarUrl",
+            "issue list": "number,title,state,url,createdAt,updatedAt,assignees,labels",
+            "pr list": "number,title,state,url,createdAt,updatedAt,headRefName,baseRefName",
+            "issue view": "number,title,state,url,body,createdAt,updatedAt,assignees,labels,comments",
+            "pr view": "number,title,state,url,body,createdAt,updatedAt,headRefName,baseRefName,mergeable"
+        }
+        
+        # Add --json with appropriate fields if needed
+        if "--json" not in " ".join(command_args):
+            # Skip for commands that don't support it
             if command_base not in non_json_commands and not (len(command_args) > 1 and command_args[1] == "create" and "--fill" in command_args):
-                command_args.append("--json")
+                # Check if we need specific fields
+                cmd_key = None
+                if len(command_args) >= 2:
+                    cmd_key = f"{command_args[0]} {command_args[1]}"
+                
+                if cmd_key in json_fields_map:
+                    command_args.extend(["--json", json_fields_map[cmd_key]])
+                else:
+                    # Default to just --json for commands that support it
+                    command_args.append("--json")
         
         # Create the full command
         cmd = ["gh"] + command_args
@@ -793,8 +816,22 @@ def test_github_client():
             if repos_result["success"] and "data" in repos_result:
                 for repo in repos_result["data"]:
                     print(f"- {repo.get('nameWithOwner', 'N/A')}: {repo.get('description', 'No description')}")
+                    print(f"  Stars: {repo.get('stargazerCount', 'N/A')}, URL: {repo.get('url', 'N/A')}")
             else:
-                print("Failed to search repositories")
+                print(f"Failed to search repositories: {repos_result.get('error', 'Unknown error')}")
+                if 'output' in repos_result:
+                    print(f"Output: {repos_result['output']}")
+            
+            # Test a direct API call
+            print("\n=== Testing Direct API Call ===")
+            api_result = run_gh_command(["api", "user"])
+            if api_result["success"] and "data" in api_result:
+                user_data = api_result["data"]
+                print(f"Logged in as: {user_data.get('login', 'N/A')}")
+                print(f"Name: {user_data.get('name', 'N/A')}")
+                print(f"Public repos: {user_data.get('public_repos', 'N/A')}")
+            else:
+                print(f"Failed to call API: {api_result.get('error', 'Unknown error')}")
             
             return True
         else:
