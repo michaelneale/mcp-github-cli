@@ -1,2 +1,3 @@
 __pycache__
 .venv
+rm mcp_github_cli.egg-info
