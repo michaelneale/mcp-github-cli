@@ -12,8 +12,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-logger.info("Starting GitHub MCP server...")
-
 instructions = """The GitHub MCP server allows you to interact with GitHub repositories, issues, pull requests, and more.
 It provides a set of tools that wrap the GitHub CLI (gh) to perform common GitHub operations like:
 
