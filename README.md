@@ -1,6 +1,6 @@
 # mcp-github-cli
 
-MCP server to give client the ability to interact with GitHub through the GitHub CLI (`gh`). Provides tools for working with repositories, issues, pull requests, and more. This is conceptually ported over from the official github MCP server - the official one uses personal access tokens which is not ideal in most situations where you can have oauth or github cli available.
+MCP server to give ability to interact with GitHub through the GitHub CLI (`gh`). Provides tools for working with repositories, issues, pull requests, and more. This is conceptually ported over from the official github MCP server - the official one uses personal access tokens which is not ideal in most situations where you can have oauth or github cli available.
 
 ## Usage
 
