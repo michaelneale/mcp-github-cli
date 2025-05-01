@@ -77,6 +77,48 @@ def run_gh_command(command_args, input_data=None):
         return {"success": False, "error": str(e)}
 
 #
+# User Information Tools
+#
+
+@mcp.tool()
+def gh_get_me() -> Dict[str, Any]:
+    """
+    Get details of the authenticated user.
+        
+    Returns:
+        Information about the authenticated user including login, name, and organizations
+    """
+    query = '''
+    query {
+      viewer {
+        login
+        name
+        bio
+        company
+        location
+        websiteUrl
+        twitterUsername
+        avatarUrl
+        organizations(first: 10) {
+          nodes {
+            login
+            name
+          }
+        }
+        repositories(first: 5, orderBy: {field: UPDATED_AT, direction: DESC}) {
+          nodes {
+            name
+            description
+            url
+          }
+        }
+      }
+    }
+    '''
+    
+    return run_gh_command(["api", "graphql", "-f", f"query={query}"])
+
+#
 # GraphQL API Tools
 #
 
@@ -593,6 +635,33 @@ def test_github_client():
         if result["success"]:
             print("\n=== GitHub Authentication Status ===")
             print(result["output"])
+            
+            # Test get_me function
+            print("\n=== Testing User Information (gh_get_me) ===")
+            me_result = gh_get_me()
+            if me_result["success"] and "data" in me_result:
+                user_data = me_result["data"]["data"]["viewer"]
+                print(f"Login: {user_data.get('login', 'N/A')}")
+                print(f"Name: {user_data.get('name', 'N/A')}")
+                print(f"Company: {user_data.get('company', 'N/A')}")
+                print(f"Bio: {user_data.get('bio', 'N/A')}")
+                print(f"Location: {user_data.get('location', 'N/A')}")
+                
+                # Print organizations if available
+                orgs = user_data.get('organizations', {}).get('nodes', [])
+                if orgs:
+                    print("Organizations:")
+                    for org in orgs[:3]:  # Show first 3 orgs
+                        print(f"  - {org.get('login', 'N/A')}")
+                
+                # Print recent repositories if available
+                repos = user_data.get('repositories', {}).get('nodes', [])
+                if repos:
+                    print("Recent repositories:")
+                    for repo in repos[:3]:  # Show first 3 repos
+                        print(f"  - {repo.get('name', 'N/A')}: {repo.get('description', 'No description')}")
+            else:
+                print(f"Failed to get user information: {me_result.get('error', 'Unknown error')}")
             
             # Test GraphQL query for viewer info
             print("\n=== Testing GraphQL Query - Viewer Info ===")

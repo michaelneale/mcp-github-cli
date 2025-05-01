@@ -30,6 +30,7 @@ uv run python main.py --test
 
 This will run a comprehensive test suite that verifies:
 - Authentication status with GitHub
+- User information retrieval (gh_get_me)
 - GraphQL query functionality (viewer info)
 - REST API repository search
 - GraphQL repository information retrieval
@@ -48,6 +49,10 @@ uv --directory /path/to/mcp-github-cli run python main.py
 ## Features
 
 This MCP server focuses on providing powerful, focused tools that leverage GitHub's GraphQL and REST APIs:
+
+### User Information
+
+- `gh_get_me()`: Get detailed information about the authenticated user
 
 ### GraphQL Tools
 
@@ -75,6 +80,13 @@ REST tools provide specific functionality for common operations:
 ## Examples
 
 Here are examples of using these tools:
+
+### User Information
+
+```python
+# Get authenticated user information
+gh_get_me()
+```
 
 ### GraphQL Examples
 
