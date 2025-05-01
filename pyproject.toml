@@ -1,7 +1,7 @@
 [project]
 name = "mcp-github-cli"
-version = "0.1.1"
-description = "GitHub CLI extension for MCP that wraps the gh command-line tool."
+version = "0.2.0"
+description = "GitHub CLI extension for MCP that provides focused GraphQL and REST API tools."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
