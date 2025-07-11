@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/michaelneale-mcp-github-cli-badge.png)](https://mseep.ai/app/michaelneale-mcp-github-cli)
+
 # mcp-github-cli
 
 MCP server that provides focused GraphQL and REST API tools for interacting with GitHub. This server offers a streamlined set of powerful tools that leverage GitHub's APIs to provide rich data and functionality.
